@@ -5,11 +5,29 @@ const Product = require('../model/product');
 
 router.get('/', (req,res,next)=>{
     Product.find()
+    .select('name description price _id')
     .exec().
     then( docs=>{
         console.log(docs);
+
+        const response = {
+            count: docs.length,
+            products: docs.map(doc=>{
+                return{
+
+                    name:doc.name,
+                    price:doc.price,
+                    description:doc.description,
+                    _id:doc.id,
+                    request: {
+                      type:'GET',
+                      url: 'http://localhost:8000/products/' + doc._id
+                    }
+                }
+            })
+        }
         // if(docs.length>= 0){
-              res.status(200).json(docs)
+              res.status(200).json(response)
         // }else{
         //     res.status(404).json({
         //         message: 'No entries found'
@@ -39,12 +57,23 @@ router.post('/', (req,res,next)=>{
         price : req.body.price
     });
 
-    product.save().then(
+    product.save()
+    .then(
         result=>{
             console.log(result)
                res.status(201).json({
-                message: 'Welcome to the products route Jaey, for Post requests',
-                createdProduct: result
+                message: 'Created Items',
+                createdProduct: {
+                    name: result.name,
+                    description: result.description,
+                    price: result.price,
+                    _id: result._id,
+                    request:{
+                        type:"Get",
+                        url: 'http://localhost:8000/products/' + result._id
+
+                    }
+                }
           });
         })
         .catch(err =>{
@@ -56,6 +85,7 @@ router.post('/', (req,res,next)=>{
 router.get('/:productId', (req,res,next)=>{
     const id = req.params.productId;
     Product.findById(id)
+    .select('name description price _id')
     .exec().
     then(
         doc=>{
@@ -103,7 +133,15 @@ router.get('/:productId', (req,res,next)=>{
         .exec()
         .then(result=>{
             console.log(result);
-            res.status(200).json(result);
+            res.status(200).json({
+                message:'Product updated successfully',
+                request:{
+                    type: 'GET',
+                    url:'http://localhost:8000/products/' + id
+                }
+
+
+            });
         })
         .catch(err=>{
             console.log(err);
@@ -122,7 +160,14 @@ router.get('/:productId', (req,res,next)=>{
     Product.deleteOne({ _id: id })
     .exec()
     .then( result =>{
-        res.status(200).json(result)
+        res.status(200).json({
+            message: 'Product deleted successfully',
+            request:{
+                type: 'POST',
+                url:'http://localhost:8000/products/',
+                body:{name:'String' ,description:'String',price:'Number'}
+            }
+        })
     })
     .catch(err=>{
         console.log(err);
@@ -132,9 +177,9 @@ router.get('/:productId', (req,res,next)=>{
 
     })
 
-    res.status(200).json({
-            message: 'you deleted this Product'
-        });
+    // res.status(200).json({
+    //         message: 'you deleted this Product'
+    //     });
  });
 
  module.exports = router;
