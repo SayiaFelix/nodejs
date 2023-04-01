@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose= require('mongoose');
@@ -34,8 +35,10 @@ app.use((req,res,next)=>{
 //     });
    
 // }); 
+
 app.use('/products',productRoutes)
 app.use('/orders',orderRoutes)
+
 
 // handling error
 app.use((req, res, next) => {
