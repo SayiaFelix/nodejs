@@ -8,8 +8,9 @@ const Product = require('../model/product')
 
 router.get('/', (req, res, next) => {
     Order.find().select('product quantity _id')
-        .exec().
-        then(docs => {
+        .populate('product', 'name')
+        .exec()
+        .then(docs => {
             res.status(200).json(
                 {
                     counts: docs.length,
@@ -40,7 +41,7 @@ router.post('/', (req, res, next) => {
     //     quantity:req.body.quantity
 
     // };
-     // res.status(201).json({
+    // res.status(201).json({
     //     message: 'You have successfully post Order Product',
     //     order:order
     // })
@@ -107,16 +108,17 @@ router.post('/', (req, res, next) => {
 })
 
 router.get('/:orderId', (req, res, next) => {
-     // res.status(200).json({
+    // res.status(200).json({
     //     message: 'You have successfully get Order Product by id',
     //     orderId: req.params.orderId
     // })
     Order.findById(req.params.orderId)
+        .populate('product')
         .exec()
         .then(order => {
-            if(!order){
+            if (!order) {
                 return res.status(404).json({
-                    message:'Order not Found'
+                    message: 'Order not Found'
                 })
 
             };
@@ -143,27 +145,27 @@ router.delete('/:orderId', (req, res, next) => {
     //     orderId: req.params.orderId,
     // })
     Order.deleteOne({ _id: req.params.orderId })
-    .exec()
-    .then(order=>{
-        res.status(200).json({
-            message:'You have successfully delete Order',
-            request: {
-                type: 'POST',
-                url: 'http://localhost:8000/orders',
-                body:{
-                    productId:'ID',quantity:'Number'
+        .exec()
+        .then(order => {
+            res.status(200).json({
+                message: 'You have successfully delete Order',
+                request: {
+                    type: 'POST',
+                    url: 'http://localhost:8000/orders',
+                    body: {
+                        productId: 'ID', quantity: 'Number'
+                    }
                 }
-            }
+            })
+
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({
+                error: err
+            })
         })
 
-    })
-    .catch( err=>{
-        console.log(err)
-        res.status(500).json({
-            error:err
-        })
-    })
-  
 })
 
 
