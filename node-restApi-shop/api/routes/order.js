@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const Order = require('../model/order');
 const Product = require('../model/product')
 
-
 router.get('/', (req, res, next) => {
     Order.find().select('product quantity _id')
         .populate('product', 'name')

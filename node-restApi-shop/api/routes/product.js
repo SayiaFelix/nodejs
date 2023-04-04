@@ -69,7 +69,6 @@ router.get('/', (req, res, next) => {
             console.log(err)
             res.status(500).json({ error: err })
         })
-
 });
 
 router.post('/',upload.single('productImage'),(req, res, next) => {
@@ -84,7 +83,7 @@ router.post('/',upload.single('productImage'),(req, res, next) => {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
-        productImage: req.file.path
+        // productImage: req.file.path
 
     });
 
@@ -157,7 +156,6 @@ router.patch('/:productId', (req, res, next) => {
     const updateOps = {};
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
-
     }
     Product.updateOne({ _id: id },
         { $set: updateOps })
@@ -170,16 +168,12 @@ router.patch('/:productId', (req, res, next) => {
                     type: 'GET',
                     url: 'http://localhost:8000/products/' + id
                 }
-
-
             });
         })
         .catch(err => {
             console.log(err);
             res.status(500).json({ error: err });
-        }
-
-        )
+        });
     // res.status(200).json({
     //         message: 'you updated this Product'
 
@@ -205,9 +199,7 @@ router.delete('/:productId', (req, res, next) => {
             res.status(500).json({
                 error: err
             })
-
-        })
-
+        });
     // res.status(200).json({
     //         message: 'you deleted this Product'
     //     });
