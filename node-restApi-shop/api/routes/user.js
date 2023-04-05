@@ -51,6 +51,7 @@ router.post('/signup', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
     User.find({ email: req.body.email })
+    .select('_id email password')
     .exec()
     .then(user=>{
         if (user.length < 1) {

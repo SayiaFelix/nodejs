@@ -1,32 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const checkAuth = require('../middleware/check-auth');
 
 const multer = require('multer');
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb){
-        cb(null,'./uploads');
+    destination: function (req, file, cb) {
+        cb(null, './uploads');
     },
-    filename: function(req,file,cb){
-        cb(null,file.originalname);
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
     }
 })
 
-const fileFilter =(req,file,cb)=>{
-    // reject file
-    if (file.mimetype ==='image/jpeg' || file.mimetype ==='image/png'){
-      cb(null,false);
-    }else{
-          //accept file
-        cb(null,true)
-    }
-}
+// const fileFilter =(req,file,cb)=>{
+//     // reject file
+//     if (file.mimetype ==='image/jpeg' || file.mimetype ==='image/png'){
+//       cb(null,false);
+//     }else{
+//           //accept file
+//         cb(null,true)
+//     }
+// }
 
-const upload = multer({ storage: storage,limit:{
-    fileSize: 1024*1024 *5
-}
-,fileFilter: fileFilter 
+const upload = multer({
+    storage: storage, limit: {
+        fileSize: 1024 * 1024 * 5
+    }
+    // ,fileFilter: fileFilter 
 });
 
 const Product = require('../model/product');
@@ -42,7 +44,6 @@ router.get('/', (req, res, next) => {
                 count: docs.length,
                 products: docs.map(doc => {
                     return {
-
                         name: doc.name,
                         price: doc.price,
                         description: doc.description,
@@ -71,7 +72,7 @@ router.get('/', (req, res, next) => {
         })
 });
 
-router.post('/',upload.single('productImage'),(req, res, next) => {
+router.post('/', upload.single('productImage'),(req, res, next) => {
     // const product ={
     //    name : req.body.name,
     //    description: req.body.description,
@@ -83,7 +84,7 @@ router.post('/',upload.single('productImage'),(req, res, next) => {
         name: req.body.name,
         description: req.body.description,
         price: req.body.price,
-        // productImage: req.file.path
+        productImage: req.file.path
 
     });
 
