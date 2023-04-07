@@ -35,11 +35,10 @@ const Product = require('../model/product');
 
 router.get('/', (req, res, next) => {
     Product.find()
-        .select('name description price _id productImage')
-        .exec().
-        then(docs => {
+        .select('name description price productImage _id')
+        .exec()
+        .then(docs => {
             console.log(docs);
-
             const response = {
                 count: docs.length,
                 products: docs.map(doc => {
@@ -72,7 +71,7 @@ router.get('/', (req, res, next) => {
         })
 });
 
-router.post('/', upload.single('productImage'),(req, res, next) => {
+router.post('/', upload.single('productImage'), (req, res, next) => {
     // const product ={
     //    name : req.body.name,
     //    description: req.body.description,
@@ -87,7 +86,6 @@ router.post('/', upload.single('productImage'),(req, res, next) => {
         productImage: req.file.path
 
     });
-
     product.save()
         .then(
             result => {
@@ -121,7 +119,6 @@ router.get('/:productId', (req, res, next) => {
         then(
             doc => {
                 console.log('From db', doc)
-
                 if (doc) {
                     res.status(200).json(doc);
                 } else {
@@ -158,8 +155,7 @@ router.patch('/:productId', (req, res, next) => {
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value;
     }
-    Product.updateOne({ _id: id },
-        { $set: updateOps })
+    Product.updateOne({ _id: id },{ $set: updateOps })
         .exec()
         .then(result => {
             console.log(result);
@@ -175,10 +171,6 @@ router.patch('/:productId', (req, res, next) => {
             console.log(err);
             res.status(500).json({ error: err });
         });
-    // res.status(200).json({
-    //         message: 'you updated this Product'
-
-    //     });
 });
 
 router.delete('/:productId', (req, res, next) => {
@@ -201,9 +193,6 @@ router.delete('/:productId', (req, res, next) => {
                 error: err
             })
         });
-    // res.status(200).json({
-    //         message: 'you deleted this Product'
-    //     });
 });
 
 module.exports = router;
