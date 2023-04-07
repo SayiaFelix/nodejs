@@ -32,6 +32,7 @@ const upload = multer({
 });
 
 const Product = require('../model/product');
+const productController = require('../controllers/product')
 
 router.get('/', (req, res, next) => {
     Product.find()
