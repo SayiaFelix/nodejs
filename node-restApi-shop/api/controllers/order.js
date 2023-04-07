@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Order = require('../model/order');
 const Product = require('../model/product');
 
+
 exports.order_get_all = (req, res, next) => {
     Order.find().select('product quantity _id')
         .populate('product', 'name')

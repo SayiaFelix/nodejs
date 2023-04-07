@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+
 const User = require('../model/user');
+
 
 exports.sign_up_user = (res,req,next)=>{
     User.find({ email: req.body.email })
@@ -82,8 +84,6 @@ exports.login_in_user =(res,req,next)=>{
                     })
                 }
             }
-            // if (user[0].password === req.body.password) {
-            // }
         })
     })
     .catch(err=>{
