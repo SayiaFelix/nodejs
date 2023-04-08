@@ -7,7 +7,7 @@ exports.product_get_all = (req,res,next)=>{
     .select('name description price productImage _id')
     .exec()
     .then(docs => {
-        console.log(docs);
+        // console.log(docs);
         const response = {
             count: docs.length,
             products: docs.map(doc => {
@@ -33,12 +33,12 @@ exports.product_get_all = (req,res,next)=>{
         // res.status(200).json({
         //   message: 'Welcome to the products route Safu, for Get requests'
         // });
+        console.log(response);
     }).
     catch(err => {
         console.log(err)
         res.status(500).json({ error: err })
     })
-
 };
 
 exports.product_post_all = (req,res,next)=>{

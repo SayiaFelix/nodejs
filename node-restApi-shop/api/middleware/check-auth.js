@@ -4,7 +4,7 @@ module.exports = (res, req, next) => {
     // get headers
     const bearerHeaders = req.headers['authorization'];
 
-    // checkif bearer is undefined
+    // check if bearer is undefined
     if(typeof bearerHeaders !== 'undefined'){
         // split at space
         const bearer = bearerHeader.split(' ');
@@ -16,7 +16,7 @@ module.exports = (res, req, next) => {
         next();
 
     }else{
-        return res.sendStatus(401).json({
+        return res.status(401).json({
             message: 'Auth Failed'
         });
     }
