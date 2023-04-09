@@ -11,10 +11,10 @@ const userRoutes = require('./api/routes/user')
 
 mongoose.connect('mongodb://localhost:27017/');
 
-
-app.use(morgan('dev'))
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json())
+app.use(morgan('dev'));
+app.use('/uploads',express.static('uploads'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 // handling CORS
 app.use((req,res,next)=>{
